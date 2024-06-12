@@ -6,9 +6,12 @@ from django.urls import path
 app_name = LmsConfig.name
 
 router = routers.DefaultRouter()
-router.register(r'', views.CourseViewSet)
+router.register(r'course', views.CourseViewSet)
 
 urlpatterns = [
+    # Платежи
+    path('payment/', views.PaymentsListApiView.as_view(), name='payments-list'),
+    # Уроки
     path('lesson/', views.LessonListApiView.as_view(), name='lesson-list'),
     path('lesson/<int:pk>/', views.LessonRetrieveApiView.as_view(), name='lesson-detail'),
     path('lesson/create/', views.LessonCreateApiView.as_view(), name='lesson-create'),

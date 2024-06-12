@@ -1,12 +1,19 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import generics
 from lms.models import Course, Lesson
-from lms.serializers import CourseSerializer, LessonSerializer
+from lms.serializers import CourseSerializer, LessonSerializer, CourseDetailSerializer, PaymentsSerializer
+from users.models import Payments
+
 
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return CourseDetailSerializer
+        return super().get_serializer_class()
 
 
 class LessonListApiView(generics.ListAPIView):
@@ -32,3 +39,10 @@ class LessonUpdateApiView(generics.UpdateAPIView):
 class LessonDestroyApiView(generics.DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+
+
+class PaymentsListApiView(generics.ListAPIView):
+    queryset = Payments.objects.all()
+    serializer_class = PaymentsSerializer
+    filterset_fields = ('payment_method', 'content_type',)
+    ordering_fields = ('payment_date',)

@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Course(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name='название курса', help_text='введите название курса')
     preview_image = models.ImageField(upload_to='courses/preview/%Y/%m/%d', blank=True, null=True,
                                       verbose_name='превью курса', help_text='выберите превью курса')
     description = models.TextField(verbose_name='описание курса', blank=True, null=True,
@@ -18,8 +18,8 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-    course = models.ForeignKey(Course, related_name='lessons', on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
+    course = models.ForeignKey(Course, related_name='lessons', on_delete=models.CASCADE, verbose_name='курс')
+    name = models.CharField(max_length=100, verbose_name='название урока', help_text='введите название урока')
     preview_image = models.ImageField(upload_to='lessons/preview/%Y/%m/%d', blank=True, null=True,
                                       verbose_name='превью урока', help_text='выберите превью урока')
     description = models.TextField(verbose_name='описание урока', blank=True, null=True,
