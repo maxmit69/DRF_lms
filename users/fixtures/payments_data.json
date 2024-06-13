@@ -1,62 +1,86 @@
 [
-  {
-    "model": "users.payments",
-    "pk": 1,
-    "fields": {
-      "user": 1,
-      "payment_date": "2023-01-01T12:00:00Z",
-      "content_type": 6,
-      "object_id": 1,
-      "payment_amount": 1000,
-      "payment_method": "card"
-    }
-  },
-  {
-    "model": "users.payments",
-    "pk": 2,
-    "fields": {
-      "user": 2,
-      "payment_date": "2023-01-02T12:00:00Z",
-      "content_type": 6,
-      "object_id": 2,
-      "payment_amount": 1500,
-      "payment_method": "cash"
-    }
-  },
-  {
-    "model": "users.payments",
-    "pk": 3,
-    "fields": {
-      "user": 3,
-      "payment_date": "2023-01-03T14:00:00Z",
-      "content_type": 7,
-      "object_id": 3,
-      "payment_amount": 1200,
-      "payment_method": "card"
-    }
-  },
-  {
-    "model": "users.payments",
-    "pk": 4,
-    "fields": {
-      "user": 2,
-      "payment_date": "2023-01-04T15:00:00Z",
-      "content_type": 7,
-      "object_id": 4,
-      "payment_amount": 2000,
-      "payment_method": "cash"
-    }
-  },
-  {
-    "model": "users.payments",
-    "pk": 5,
-    "fields": {
-      "user": 3,
-      "payment_date": "2023-01-05T16:00:00Z",
-      "content_type": 6,
-      "object_id": 5,
-      "payment_amount": 1700,
-      "payment_method": "card"
-    }
+{
+  "model": "users.payments",
+  "pk": 9,
+  "fields": {
+    "user": 6,
+    "payment_date": "2024-06-13T07:49:36.566Z",
+    "content_type": 6,
+    "object_id": 1,
+    "payment_amount": 1000,
+    "payment_method": "card"
   }
+},
+{
+  "model": "users.payments",
+  "pk": 10,
+  "fields": {
+    "user": 7,
+    "payment_date": "2024-06-13T07:50:03.157Z",
+    "content_type": 7,
+    "object_id": 2,
+    "payment_amount": 2000,
+    "payment_method": "card"
+  }
+},
+{
+  "model": "users.payments",
+  "pk": 11,
+  "fields": {
+    "user": 8,
+    "payment_date": "2024-06-13T07:50:37.852Z",
+    "content_type": 7,
+    "object_id": 3,
+    "payment_amount": 1500,
+    "payment_method": "cash"
+  }
+},
+{
+  "model": "users.payments",
+  "pk": 12,
+  "fields": {
+    "user": 9,
+    "payment_date": "2024-06-13T07:51:18.781Z",
+    "content_type": 7,
+    "object_id": 4,
+    "payment_amount": 2600,
+    "payment_method": "cash"
+  }
+},
+{
+  "model": "users.payments",
+  "pk": 13,
+  "fields": {
+    "user": 7,
+    "payment_date": "2024-06-13T07:52:32.680Z",
+    "content_type": 7,
+    "object_id": 5,
+    "payment_amount": 1800,
+    "payment_method": "cash"
+  }
+},
+{
+  "model": "users.payments",
+  "pk": 14,
+  "fields": {
+    "user": 7,
+    "payment_date": "2024-06-13T07:56:26.775Z",
+    "content_type": 6,
+    "object_id": 2,
+    "payment_amount": 3000,
+    "payment_method": "cash"
+  }
+},
+{
+  "model": "users.payments",
+  "pk": 15,
+  "fields": {
+    "user": 7,
+    "payment_date": "2024-06-13T08:16:52.342Z",
+    "content_type": 6,
+    "object_id": 3,
+    "payment_amount": 2500,
+    "payment_method": "card"
+  }
+}
 ]

@@ -8,6 +8,8 @@ class Course(models.Model):
                                       verbose_name='превью курса', help_text='выберите превью курса')
     description = models.TextField(verbose_name='описание курса', blank=True, null=True,
                                    help_text='введите описание курса')
+    owner = models.ForeignKey('users.User', related_name='courses', on_delete=models.SET_NULL,
+                              blank=True, null=True, help_text='выберите автора курса', verbose_name='автор курса')
 
     def __str__(self):
         return self.name
@@ -25,6 +27,8 @@ class Lesson(models.Model):
     description = models.TextField(verbose_name='описание урока', blank=True, null=True,
                                    help_text='введите описание урока')
     link_to_video = models.URLField(verbose_name='ссылка на видео', help_text='введите ссылку на видео')
+    owner = models.ForeignKey('users.User', related_name='lessons', on_delete=models.SET_NULL, blank=True, null=True,
+                              help_text='выберите автора урока', verbose_name='автор урока')
 
     def __str__(self):
         return self.name
