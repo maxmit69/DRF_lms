@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 # Create your models here.
@@ -36,3 +37,22 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'урок'
         verbose_name_plural = 'уроки'
+
+
+class Subscription(models.Model):
+    """ Подписки пользователя
+    """
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='subscriptions',
+                             verbose_name='пользователь')
+    course = models.ForeignKey('lms.Course', on_delete=models.CASCADE, related_name='subscriptions',
+                               verbose_name='курс', help_text='курс')
+    subscription_date = models.DateTimeField(auto_now_add=True, verbose_name='дата подписки', help_text='дата подписки')
+
+    def __str__(self):
+        return f'{self.user} подписан на {self.course}'
+
+    class Meta:
+        unique_together = ('user', 'course')
+        verbose_name = 'подписка'
+        verbose_name_plural = 'подписки'
+        ordering = ['-id']
