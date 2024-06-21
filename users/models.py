@@ -73,6 +73,15 @@ class Payments(models.Model):
     payment_method = models.CharField(verbose_name='способ оплаты', max_length=100,
                                       choices=PAYMENT_METHOD_CHOICES,
                                       help_text='выберите способ оплаты')
+    stripe_product_id = models.CharField(max_length=255, blank=True, null=True, verbose_name='идентификатор продукта',
+                                         help_text='идентификатор продукта')
+    stripe_price_id = models.CharField(max_length=255, blank=True, null=True, verbose_name='идентификатор цены',
+                                       help_text='идентификатор цены')
+    stripe_session_id = models.CharField(max_length=400, blank=True, null=True, verbose_name='идентификатор сессии',
+                                         help_text='идентификатор сессии')
+    payment_url = models.URLField(max_length=400, blank=True, null=True, verbose_name='ссылка на оплату',
+                                  help_text='ссылка на оплату')
+    status = models.CharField(max_length=50, default='created', verbose_name='статус', help_text='статус платежа')
 
     def __str__(self):
         return f'Платеж пользователя {self.user} на {self.payment_date}'

@@ -1,11 +1,12 @@
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import generics, status
 from lms.models import Course, Lesson
 from lms.paginators import MyPagination
-from lms.permissions import IsModer, IsOwner
+from lms.permissions import IsModer, IsOwner, IsUser
 from lms import serializers
 from lms.models import Subscription
 from users.models import Payments
@@ -42,12 +43,17 @@ class CourseViewSet(ModelViewSet):
         course.owner = self.request.user
         course.save()
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
 
 # Уроки___________________________________________________________________
 class LessonListApiView(generics.ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = serializers.LessonSerializer
-    permission_classes = (IsModer | IsOwner,)
+    permission_classes = (IsModer | IsOwner, IsAuthenticated,)
     pagination_class = MyPagination
 
     def get(self, request):
@@ -98,6 +104,28 @@ class PaymentsListApiView(generics.ListAPIView):
 class SubscriptionViewSet(ModelViewSet):
     queryset = Subscription.objects.all()
     serializer_class = serializers.SubscriptionsSerializer
+
+    def get_permissions(self):
+        """ Права для действий """
+        if self.action in ['create', 'destroy']:
+            self.permission_classes = [IsUser]
+        else:
+            self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()
+
+    def perform_create(self, serializer):
+        """ Права для создания подписки """
+        user = self.request.user
+        if 'user' in self.request.data and self.request.data['user'] != user.id:
+            raise PermissionDenied('У вас нет прав для создания подписки')
+        serializer.save(user=user)
+
+    def perform_destroy(self, instance):
+        """ Права для удаления подписки """
+        if instance.user == self.request.user:
+            instance.delete()
+        else:
+            raise PermissionDenied('У вас нет прав для удаления подписки')
 
     @action(detail=False, methods=['post'], url_path='subscribe')
     def subscribe(self, request):

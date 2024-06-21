@@ -7,7 +7,7 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('MY_SECRET_KEY')
 
 DEBUG = True
 
@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
 
     'rest_framework_simplejwt',
     'django_filters',
@@ -119,3 +120,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+STRIPE_SECRET_KEY = os.getenv('MY_STRIPE_SECRET_KEY')
+STRIPE_SUCCESS_URL = 'https://127.0.0.1:8000/admin'
+STRIPE_CANCEL_URL = 'https://127.0.0.1:8000/admin'
+
+COURSE_PRICE = 0
