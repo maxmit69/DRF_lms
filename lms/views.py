@@ -53,7 +53,7 @@ class CourseViewSet(ModelViewSet):
         course = serializer.save()
         subscriptions = Subscription.objects.filter(course=course)
         for subscription in subscriptions:
-            send_update_email(subscription.user.email, course.name)
+            send_update_email.delay(subscription.user.email, course.name)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
