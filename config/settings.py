@@ -1,6 +1,8 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -22,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
 
+    'django_celery_beat',
     'rest_framework_simplejwt',
     'django_filters',
     'lms',
@@ -126,3 +129,34 @@ STRIPE_SUCCESS_URL = 'https://127.0.0.1:8000/admin'
 STRIPE_CANCEL_URL = 'https://127.0.0.1:8000/admin'
 
 COURSE_PRICE = 0
+
+# Настройки Celery
+CELERY_BROKER_URL = os.getenv('MY_CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.getenv('MY_CELERY_RESULT_BACKEND')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 минут
+
+
+# Настройки django-celery-beat
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+CELERY_BEAT_SCHEDULE = {
+    'check-inactive-users': {
+        'task': 'users.tasks.check_inactive_users',
+        'schedule': crontab(minute=0, hour=0),  # Запускать ежедневно в полночь
+    }
+}
+
+# Настройки почты
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('MY_EMAIL_HOST')
+EMAIL_PORT = os.getenv('MY_EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('MY_EMAIL_USE_TLS', 'False') == 'True'
+EMAIL_USE_SSL = os.getenv('MY_EMAIL_USE_SSL', 'False') == 'True'
+EMAIL_HOST_USER = os.getenv('MY_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('MY_EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('MY_DEFAULT_FROM_EMAIL')

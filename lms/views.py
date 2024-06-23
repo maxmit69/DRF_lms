@@ -9,6 +9,7 @@ from lms.paginators import MyPagination
 from lms.permissions import IsModer, IsOwner, IsUser
 from lms import serializers
 from lms.models import Subscription
+from lms.tasks import send_update_email
 from users.models import Payments
 
 
@@ -47,6 +48,25 @@ class CourseViewSet(ModelViewSet):
         context = super().get_serializer_context()
         context['request'] = self.request
         return context
+
+    def perform_update(self, serializer):
+        course = serializer.save()
+        subscriptions = Subscription.objects.filter(course=course)
+        for subscription in subscriptions:
+            send_update_email(subscription.user.email, course.name)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        # Если у экземпляра объекта есть кэш предварительно загруженных объектов, этот кэш очищается
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
 
 
 # Уроки___________________________________________________________________

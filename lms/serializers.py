@@ -22,6 +22,8 @@ class CourseSerializer(ModelSerializer):
         fields = '__all__'
 
     def get_is_subscribed(self, obj):
+        """ Подписан ли пользователь на курс
+        """
         user = self.context.get('request').user
         if user.is_authenticated:
             return Subscription.objects.filter(user=user, course=obj).exists()
