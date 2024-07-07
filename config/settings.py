@@ -64,14 +64,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
+        'django_filters.rest_framework.DjangoFilterBackend'  # Фильтрация
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # Аутентификация по токенам
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.AllowAny',       # Всё разрешено
+        'rest_framework.permissions.IsAuthenticated',  # Только аутентифицированные пользователи
     ]
 }
 
@@ -84,11 +84,11 @@ SIMPLE_JWT = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('MY_NAME'),  # Название БД
-        'USER': os.getenv('MY_USER'),  # Пользователь для подключения
-        'PASSWORD': os.getenv('MY_PASSWORD'),  # Пароль для этого пользователя
-        'HOST': os.getenv('MY_HOST'),  # Адрес, на котором развернут сервер БД
-        'PORT': os.getenv('MY_PORT')  # Порт, на котором работает сервер БД
+        'NAME': os.getenv('POSTGRES_DB'),  # Название БД
+        'USER': os.getenv('POSTGRES_USER'),  # Пользователь для подключения
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),  # Пароль для этого пользователя
+        'HOST': os.getenv('POSTGRES_HOST'),  # Адрес, на котором развернут сервер БД
+        'PORT': os.getenv('POSTGRES_PORT')  # Порт, на котором работает сервер БД
     }
 }
 
@@ -133,12 +133,12 @@ COURSE_PRICE = 0
 # Настройки Celery
 CELERY_BROKER_URL = os.getenv('MY_CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = os.getenv('MY_CELERY_RESULT_BACKEND')
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = TIME_ZONE
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 минут
+CELERY_ACCEPT_CONTENT = ['json']   # Принимаем данные в формате JSON
+CELERY_TASK_SERIALIZER = 'json'    # Сериализатор задач
+CELERY_RESULT_SERIALIZER = 'json'  # Сериализатор результата
+CELERY_TIMEZONE = TIME_ZONE        # Часовой пояс
+CELERY_TASK_TRACK_STARTED = True   # Отслеживание задач
+CELERY_TASK_TIME_LIMIT = 30 * 60   # 30 минут
 
 
 # Настройки django-celery-beat

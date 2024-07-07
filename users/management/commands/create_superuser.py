@@ -4,7 +4,7 @@ from users.models import User
 
 
 class Command(BaseCommand):
-    help = 'Создать суперпользователя с определенными данными'
+    help = 'Команда для создания суперпользователя python manage.py create_superuser'
 
     def handle(self, *args, **options):
         user = User.objects.create(

@@ -1,0 +1,73 @@
+version: "3"
+
+services:
+  redis:
+    image: redis
+    restart: on-failure  # Перезапускает сервис, если он упадет.
+    expose: # Открывает порт 6379 для внутреннего общения между контейнерами (не доступен снаружи).
+      - "6379"
+
+  db:
+    image: postgres
+    restart: on-failure
+    env_file: # Загружает переменные окружения из файла .env.
+      - .env
+    expose: # Закрытый порт, на котором работает БД
+      - "5432"
+    volumes: # Монтирует том для постоянного хранения данных
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck: # Проверяет доступность базы данных с помощью команды pg_isready.
+      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .  # Сервис строится из текущего контекста (локальный Dockerfile).
+    tty: true  # Оставляет терминал открытым для контейнера.
+    ports:  # Пробрасывает порт 8000 для внешнего взаимодействия с приложением
+      - "8000:8000"
+    command: >  # Выполняет миграции, создает суперпользователя если его нет и запускает сервер Django.
+      sh -c "poetry run python manage.py migrate && \
+             poetry run python manage.py create_superuser --no-input --email admin@localhost.com --username admin --password admin || true &&
+             poetry run python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - .env
+    depends_on:  # Зависит от сервиса db и проверяет его состояние.
+      db:
+        condition: service_healthy
+
+    volumes: # Монтирует текущую директорию в контейнер.
+      - .:/app
+
+  celery:
+    build: .
+    tty: true
+    command: [ "sh", "-c", "poetry run celery -A config worker --loglevel=info" ]
+    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:  #  Зависит от сервисов redis, app, и db.
+      - redis
+      - app
+      - db
+
+  celery-beat:
+    build: .
+    tty: true
+    command: [ "sh", "-c", "poetry run celery -A config beat --loglevel=info" ]
+    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - app
+      - db
+
+# Том для базы данных
+volumes: # Определяет том для постоянного хранения данных Postgres
+  postgres_data:

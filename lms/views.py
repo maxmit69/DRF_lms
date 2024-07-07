@@ -9,7 +9,7 @@ from lms.paginators import MyPagination
 from lms.permissions import IsModer, IsOwner, IsUser
 from lms import serializers
 from lms.models import Subscription
-from lms.tasks import send_update_email
+from lms.tasks import send_update_email  # Импорт задач Celery
 from users.models import Payments
 
 
@@ -56,6 +56,7 @@ class CourseViewSet(ModelViewSet):
             send_update_email.delay(subscription.user.email, course.name)
 
     def update(self, request, *args, **kwargs):
+        """ Обновляет объект, используя данные, предоставленные в запросе."""
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -114,6 +115,7 @@ class LessonDestroyApiView(generics.DestroyAPIView):
 
 # Платежи___________________________________________________________________
 class PaymentsListApiView(generics.ListAPIView):
+    """ Список платежей """
     queryset = Payments.objects.all()
     serializer_class = serializers.PaymentsSerializer
     filterset_fields = ('payment_method', 'content_type',)
